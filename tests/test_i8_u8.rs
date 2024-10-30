@@ -1,0 +1,44 @@
+use map_range_int::MapRange;
+
+// unsigned->unsigned mapping
+
+#[test]
+fn test_uu() {
+    for x in 0..=255u8 {
+        let x2: Option<u8> = x.map_range((0, 255), (0, 255));
+        assert_eq!(Some(x), x2);
+    }
+}
+
+// unsigned->signed mapping
+
+#[test]
+fn test_ui() {
+    for x in 0..=255u8 {
+        let x2: Option<i8> = x.map_range((0, 255), (-128, 127));
+        assert_eq!(Some((-128i8).saturating_add_unsigned(x)), x2);
+    }
+}
+
+// signed->unsigned mapping
+
+#[test]
+fn test_iu() {
+    for x in -128..=127i8 {
+        let x2: Option<u8> = x.map_range((-128, 127), (0, 255));
+        assert_eq!(Some(0u8.saturating_add((-128i8).abs_diff(x))), x2);
+    }
+}
+
+// signed->signed mapping
+
+#[test]
+fn test_ii() {
+    for x in -128..=127i8 {
+        let x2: Option<i8> = x.map_range((-128, 127), (-128, 127));
+        assert_eq!(
+            Some((-128i8).saturating_add_unsigned((-128i8).abs_diff(x))),
+            x2
+        );
+    }
+}
