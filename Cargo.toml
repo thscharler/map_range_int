@@ -1,0 +1,12 @@
+[package]
+name = "map_range_int"
+version = "0.1.0"
+edition = "2021"
+description = "map a value from one range to another"
+license = "MIT/Apache-2.0"
+repository = "https://github.com/thscharler/map_range_int"
+readme = "readme.md"
+keywords = ["range", "mapping"]
+exclude = [".idea/*", ".gitignore"]
+
+[dependencies]
