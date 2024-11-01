@@ -1,3 +1,5 @@
+[Changes](https://github.com/thscharler/map_range_int/blob/master/changes.md)
+
 ## MapRange
 
 MapRange maps a value from one range to a second range.

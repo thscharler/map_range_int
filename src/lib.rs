@@ -4,13 +4,23 @@
 /// Map ranges to ranges.
 pub trait MapRange<Out>
 where
-    Self: Sized,
+    Self: PartialOrd + Sized,
+    Out: PartialOrd,
 {
     /// Map from a source range to a target range.
     ///
     /// Returns None if self is out of bounds for range.
     /// Can also map reversed ranges.
-    fn map_range(self, range: (Self, Self), o_range: (Out, Out)) -> Option<Out>;
+    #[inline(always)]
+    fn map_range(self, range: (Self, Self), o_range: (Out, Out)) -> Option<Out> {
+        if self < range.0 || self > range.1 {
+            return None;
+        }
+        if o_range.1 < o_range.0 {
+            return None;
+        }
+        Some(self.map_range_unchecked(range, o_range))
+    }
 
     /// Map from a source range to a target range.
     /// Does no bounds checks, but avoids division by zero for an empty
@@ -32,21 +42,6 @@ where
 macro_rules! uu_map_range {
     ($src_ty:ty, $calc_ty:ty, $tgt_ty:ty) => {
         impl MapRange<$tgt_ty> for $src_ty {
-            #[inline(always)]
-            fn map_range(
-                self,
-                range: (Self, Self),
-                o_range: ($tgt_ty, $tgt_ty),
-            ) -> Option<$tgt_ty> {
-                if self < range.0 || self > range.1 {
-                    return None;
-                }
-                if o_range.1 < o_range.0 {
-                    return None;
-                }
-                Some(self.map_range_unchecked(range, o_range))
-            }
-
             #[inline(always)]
             fn map_range_unchecked(
                 self,
@@ -110,21 +105,6 @@ macro_rules! iu_map_range {
     ($src_ty:ty, $calc_ty:ty, $tgt_ty:ty) => {
         impl MapRange<$tgt_ty> for $src_ty {
             #[inline(always)]
-            fn map_range(
-                self,
-                range: (Self, Self),
-                o_range: ($tgt_ty, $tgt_ty),
-            ) -> Option<$tgt_ty> {
-                if self < range.0 || self > range.1 {
-                    return None;
-                }
-                if o_range.1 < o_range.0 {
-                    return None;
-                }
-                Some(self.map_range_unchecked(range, o_range))
-            }
-
-            #[inline(always)]
             fn map_range_unchecked(
                 self,
                 range: (Self, Self),
@@ -186,21 +166,6 @@ iu_map_range!(isize, u128, usize);
 macro_rules! ui_map_range {
     ($src_ty:ty, $calc_ty:ty, $utgt_ty:ty, $tgt_ty:ty) => {
         impl MapRange<$tgt_ty> for $src_ty {
-            #[inline(always)]
-            fn map_range(
-                self,
-                range: (Self, Self),
-                o_range: ($tgt_ty, $tgt_ty),
-            ) -> Option<$tgt_ty> {
-                if self < range.0 || self > range.1 {
-                    return None;
-                }
-                if o_range.1 < o_range.0 {
-                    return None;
-                }
-                Some(self.map_range_unchecked(range, o_range))
-            }
-
             #[inline(always)]
             fn map_range_unchecked(
                 self,
@@ -264,21 +229,6 @@ macro_rules! ii_map_range {
     ($src_ty:ty, $calc_ty:ty, $utgt_ty:ty, $tgt_ty:ty) => {
         impl MapRange<$tgt_ty> for $src_ty {
             #[inline(always)]
-            fn map_range(
-                self,
-                range: (Self, Self),
-                o_range: ($tgt_ty, $tgt_ty),
-            ) -> Option<$tgt_ty> {
-                if self < range.0 || self > range.1 {
-                    return None;
-                }
-                if o_range.1 < o_range.0 {
-                    return None;
-                }
-                Some(self.map_range_unchecked(range, o_range))
-            }
-
-            #[inline(always)]
             fn map_range_unchecked(
                 self,
                 range: (Self, Self),
@@ -340,21 +290,6 @@ ii_map_range!(isize, u128, usize, isize);
 macro_rules! f_map_range {
     ($src_ty:ty, $calc_ty:ty, $tgt_ty:ty) => {
         impl MapRange<$tgt_ty> for $src_ty {
-            #[inline(always)]
-            fn map_range(
-                self,
-                range: (Self, Self),
-                o_range: ($tgt_ty, $tgt_ty),
-            ) -> Option<$tgt_ty> {
-                if self < range.0 || self > range.1 {
-                    return None;
-                }
-                if o_range.1 < o_range.0 {
-                    return None;
-                }
-                Some(self.map_range_unchecked(range, o_range))
-            }
-
             #[inline(always)]
             fn map_range_unchecked(
                 self,
